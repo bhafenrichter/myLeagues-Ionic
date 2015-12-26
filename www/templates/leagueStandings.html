@@ -1,7 +1,22 @@
 <ion-view title="League Standings">
     <ion-content overflow-scroll="true" padding="true" class="has-header">
-        <ion-list>
-            <ion-item>1. Brandon Hafenrichter</ion-item>
-        </ion-list>
+        <ul class="list">
+            <li class="item" style="padding:0px 10px 0px 0px;" ng-repeat="user in standings">
+                <div class="row">
+                    <div class="col-20">
+                        <img src="https://s3.amazonaws.com/uifaces/faces/twitter/zack415/128.jpg" style="width:30px; height:30px; border-radius:25px;" />
+                    </div>
+                    <div class="col-50">
+                        <h2 style="padding-top: 5px;"><a href="#/leagueMember/userid/{{user.get('UserID')}}/userleagueid/{{user.id}}">{{user.get("ShortName")}}</a></h2>
+                    </div>
+                    <div class="col-25" style="padding-top: 5px;">
+                        <h2>{{user.get("Wins")}}-{{user.get("Losses")}}</h2>
+                    </div>
+                    <div class="col-5" style="padding-top: 5px;">
+                        <h2 style="color:red;"> +2</h2>
+                    </div>
+                </div>
+            </li>
+        </ul>
     </ion-content>
 </ion-view>

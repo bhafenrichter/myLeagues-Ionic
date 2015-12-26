@@ -82,7 +82,8 @@ angular.module('app.routes', [])
     .state('tabsController', {
       url: '/tabs',
       abstract:true,
-      templateUrl: 'templates/tabsController.html'
+      templateUrl: 'templates/tabsController.html',
+      controller: 'tabCtrl'
     })
       
     
@@ -99,7 +100,7 @@ angular.module('app.routes', [])
       
         
     .state('leagueMember', {
-      url: '/leagueMember',
+      url: '/leagueMember/userid/:userid/userleagueid/:userleagueid',
       templateUrl: 'templates/leagueMember.html',
       controller: 'leagueMemberCtrl'
     })
