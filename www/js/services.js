@@ -59,9 +59,10 @@ angular.module('app.services', [])
         var standings = Parse.Object.extend("UserLeague");
         var query = new Parse.Query(standings);
         query.equalTo("LeagueID",leagueid);
+        query.include(Parse.User);
         query.descending("Wins");
         return query.find({
-            success:function(results){},
+            success:function(results){console.log(results);},
             error:function(error){console.log(error);}
         });
     };
@@ -85,8 +86,14 @@ angular.module('app.services', [])
         });    
     };
     
-    factory.getAllUserInformation = function(leagueid){
+    factory.getAllUserInformation = function(userleaguearray){
         
+        var query = new Parse.Query(Parse.User);
+        query.containedIn("objectId", userleaguearray);
+        return query.find({
+            success:function(results){console.table(results);},
+            error:function(error){console.log(error);}
+        });
     };
     
     return factory;
