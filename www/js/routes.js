@@ -106,6 +106,20 @@ angular.module('app.routes', [])
     })
         
       
+  
+    .state('leagueSchedule',{
+        url: '/leagueSchedule/userleagueid/:userleagueid',
+        templateUrl: 'templates/leagueSchedule.html',
+        controller: 'leagueScheduleCtrl'
+    
+    })
+  
+  .state('leagueGame',{
+        url: '/leagueGame/gameid/:gameid',
+        templateUrl: 'templates/leagueGame.html',
+        controller: 'leagueGameCtrl'
+    
+    })
     ;
 
   // if none of the above states are matched, use this as the fallback

@@ -3,7 +3,8 @@
         <img ng-src="{{userleague.get('ProfilePictureUrl')}}" style="border-radius:50px; width:100px; height:100px; border: solid white 2px; box-shadow: 0px 0px 10px #888888; margin: 0 auto; display:block;"/>
         <h3 style="text-align:center;">{{user.get('firstName')}} {{user.get('lastName')}}</h3>
         <div>
-            <p style="text-align:center;">{{user.get('profileMotto')}}</p>
+            <p style="text-align:center;">{{userleague.get("Wins")}}-{{userleague.get("Losses")}}</p>
+<!--            <p style="text-align:center;">{{user.get('profileMotto')}}</p>-->
         </div>
         
         <div class="row">
@@ -17,20 +18,20 @@
             </div>
         </div>
         
-        <div class="list card">
+        <div class="list card" style="margin:0px;">
             <div class="item item-divider">Recent Games</div>
             <div class="item item-body">
                 <ul class="list" style="padding:0px 0px 0px 0px;">
                     <li class="item" ng-repeat="game in recentUserGames" style="padding:0px 0px 0px 0px;">
-                        <div class="row" >
+                        <div class="row">
                             <div class="col-50">
-                                {{getUser(game.get('opponentID')).get('ShortName')}}
+                                <p style="margin-top:0px;">vs. {{printOpponent(game)}}</p>
                             </div>
                             <div class="col-25">
-                                {{game.get("userScore")}}
+                                <p style="margin-top:0px; text-align:right;">{{game.get("userScore")}}</p>
                             </div>
                             <div class="col-25">
-                                {{game.get("opponentScore")}}
+                                <p style="margin-top:0px; text-align:right;">{{game.get("opponentScore")}}</p>
                             </div>
                         </div>
                     </li>
@@ -38,6 +39,6 @@
                 
             </div>
         </div>
-        <a href="#/tabs/recentGames" class="button button-stable button-block ">See Full Schedule</a>
+        <a href="#/leagueSchedule/userleagueid/{{userleague.id}}" class="button button-stable button-block ">See Full Schedule</a>
     </ion-content>
 </ion-view>

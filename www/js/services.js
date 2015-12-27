@@ -107,8 +107,11 @@ angular.module('app.services', [])
         query2.equalTo("opponentID", userleagueid);
         
         var mainQuery = Parse.Query.or(query1, query2);
-        mainQuery.descending("createdAt");     
-        mainQuery.limit(3);
+        mainQuery.descending("createdAt");    
+        
+        if(isLimited){
+            mainQuery.limit(3);
+        }
         return mainQuery.find({
             success:function(results){},
             error:function(error){console.log(error);}

@@ -60,8 +60,9 @@ angular.module('app.controllers', [])
     }
     
     //get the recent games of that specific user
-    LeagueService.getRecentGamesForUser($stateParams.userleagueid).then(function(data){
+    LeagueService.getRecentGamesForUser($stateParams.userleagueid, true).then(function(data){
         $scope.recentUserGames = data;
+        $scope.$apply();
     });
     
     $scope.formatAverage = function(str){
@@ -74,7 +75,43 @@ angular.module('app.controllers', [])
                 return $rootScope.standings[j];    
             }
         }
-    }                                                                                              
+    }; 
+    
+    $scope.printOpponent = function(game){
+        if(game.get("userID") == $stateParams.userleagueid){
+            return $scope.getUser(game.get("opponentID")).get("ShortName");
+        }else{
+            return $scope.getUser(game.get("userID")).get("ShortName");
+        }
+    };
+})
+
+.controller('leagueScheduleCtrl', function($scope, LeagueService, $stateParams, $rootScope){
+    //gets all of the games 
+    LeagueService.getRecentGamesForUser($stateParams.userleagueid, false).then(function(data){
+        $scope.scheduledGames = data;
+        $scope.$apply();
+    });
+    
+    $scope.getUser = function(id){
+        for(var j = 0; j < $rootScope.standings.length; j++){
+            if(id == $rootScope.standings[j].id){
+                return $rootScope.standings[j];    
+            }
+        }
+    }; 
+})
+
+.controller('leagueGameCtrl', function($scope, LeagueService, $stateParams, $rootScope){
+    $scope.getUser = function(id){
+        for(var j = 0; j < $rootScope.standings.length; j++){
+            if(id == $rootScope.standings[j].id){
+                return $rootScope.standings[j];    
+            }
+        }
+    }; 
+    
+    
 })
 
 .controller('tabCtrl', function($rootScope, LeagueService){
@@ -98,7 +135,5 @@ angular.module('app.controllers', [])
         $rootScope.recentGames = data;
         
     });
-    
-    
 })
  

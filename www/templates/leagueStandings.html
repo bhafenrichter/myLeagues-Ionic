@@ -7,13 +7,13 @@
                         <img ng-src="{{user.get('ProfilePictureUrl')}}" style="width:30px; height:30px; border-radius:25px;" />
                     </div>
                     <div class="col-50">
-                        <h2 style="padding-top: 5px;"><a href="#/leagueMember/userid/{{user.get('UserID')}}/userleagueid/{{user.id}}">{{user.get("ShortName")}}</a></h2>
+                        <p style="padding-top: 5px;"><a href="#/leagueMember/userid/{{user.get('UserID')}}/userleagueid/{{user.id}}" style="text-decoration:none;">{{user.get("ShortName")}}</a></p>
                     </div>
                     <div class="col-25" style="padding-top: 5px;">
-                        <h2>{{user.get("Wins")}}-{{user.get("Losses")}}</h2>
+                        <p>{{user.get("Wins")}}-{{user.get("Losses")}}</p>
                     </div>
                     <div class="col-5" style="padding-top: 5px;">
-                        <h2 style="color:red;"> +2</h2>
+                        <p style="color:red;"> +2</p>
                     </div>
                 </div>
             </li>
