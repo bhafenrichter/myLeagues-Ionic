@@ -1,6 +1,6 @@
 <ion-view title="League Member">
     <ion-content overflow-scroll="true" padding="true" class="has-header">
-        <img src="{{user.get('profilePictureUrl')}}" style="border-radius:50px; width:100px; height:100px; border: solid white 2px; box-shadow: 0px 0px 10px #888888; margin: 0 auto; display:block;"/>
+        <img ng-src="{{userleague.get('ProfilePictureUrl')}}" style="border-radius:50px; width:100px; height:100px; border: solid white 2px; box-shadow: 0px 0px 10px #888888; margin: 0 auto; display:block;"/>
         <h3 style="text-align:center;">{{user.get('firstName')}} {{user.get('lastName')}}</h3>
         <div>
             <p style="text-align:center;">{{user.get('profileMotto')}}</p>
@@ -8,18 +8,35 @@
         
         <div class="row">
             <div class="col-50">
-                <h3 style="text-align:center;">{{userleague.get('PointsScored') / userleague.get('Wins') + userleague.get('Losses')}}</h3>
+                <h3 style="text-align:center;">{{formatAverage(userleague.get('PointsScored') / userleague.get('Wins') + userleague.get('Losses'))}}</h3>
                 <p style="text-align:center;">Points Per Game</p>
             </div>
             <div class="col-50">
-                <h3 style="text-align:center;">{{userleague.get('PointsAllowed') / userleague.get('Wins') + userleague.get('Losses')}}</h3>
+                <h3 style="text-align:center;">{{formatAverage(userleague.get('PointsAllowed') / userleague.get('Wins') + userleague.get('Losses'))}}</h3>
                 <p style="text-align:center;">Points Allowed</p>
             </div>
         </div>
         
         <div class="list card">
             <div class="item item-divider">Recent Games</div>
-            <div class="item item-body"></div>
+            <div class="item item-body">
+                <ul class="list" style="padding:0px 0px 0px 0px;">
+                    <li class="item" ng-repeat="game in recentUserGames" style="padding:0px 0px 0px 0px;">
+                        <div class="row" >
+                            <div class="col-50">
+                                {{getUser(game.get('opponentID')).get('ShortName')}}
+                            </div>
+                            <div class="col-25">
+                                {{game.get("userScore")}}
+                            </div>
+                            <div class="col-25">
+                                {{game.get("opponentScore")}}
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+                
+            </div>
         </div>
         <a href="#/tabs/recentGames" class="button button-stable button-block ">See Full Schedule</a>
     </ion-content>

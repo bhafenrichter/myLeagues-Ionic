@@ -4,11 +4,11 @@
             <li class="item" style="padding:0px 25px 0px 0px;" ng-repeat="game in recentGames">
                 <div class="row">
                     <div class="col-20">
-                        <img src="https://s3.amazonaws.com/uifaces/faces/twitter/zack415/128.jpg" style="width:30px; height:30px; border-radius:25px; margin-top:10px;" />
+                        <img ng-src="{{getUser(game.get('userID')).get('ProfilePictureUrl')}}" style="width:30px; height:30px; border-radius:25px;" />
                     </div>
                     <div class="col-50">
-                        <h2 style="padding-top: 5px;">{{setName(game.get("userID"))}}</h2>
-                        <p>5-2</p>
+                        <h2 style="padding-top: 5px;">{{getUser(game.get('userID')).get('ShortName')}}</h2>
+                        <p>{{getUser(game.get('userID')).get('Wins')}}-{{getUser(game.get('userID')).get('Losses')}}</p>
                     </div>
                     <div class="col-offset-20 col-15">
                         <h1>{{game.get("userScore")}}</h1>
@@ -16,11 +16,11 @@
                 </div>
                 <div class="row">
                     <div class="col-20">
-                        <img src="https://s3.amazonaws.com/uifaces/faces/twitter/zack415/128.jpg" style="width:30px; height:30px; border-radius:25px; margin-top:10px;" />
+                        <img ng-src="{{getUser(game.get('opponentID')).get('ProfilePictureUrl')}}" style="width:30px; height:30px; border-radius:25px; margin-top:10px;" />
                     </div>
                     <div class="col-50">
-                        <h2 style="padding-top: 5px;">{{setName(game.get("opponentID"))}}</h2>
-                        <p>2-3</p>
+                        <h2 style="padding-top: 5px;">{{getUser(game.get('opponentID')).get('ShortName')}}</h2>
+                        <p>{{getUser(game.get('opponentID')).get('Wins')}}-{{getUser(game.get('opponentID')).get('Losses')}}</p>
                     </div>
                     <div class="col-offset-20 col-15">
                         <h1>{{game.get("opponentScore")}}</h1>

@@ -96,6 +96,25 @@ angular.module('app.services', [])
         });
     };
     
+    factory.getRecentGamesForUser = function(userleagueid, isLimited){
+        
+        var gamesAsUser = new Parse.Object.extend("Game");
+        var query1 = new Parse.Query(gamesAsUser);
+        query1.equalTo("userID", userleagueid);
+        
+        var gamesAsOpponent = new Parse.Object.extend("Game");
+        var query2 = new Parse.Query(gamesAsOpponent);
+        query2.equalTo("opponentID", userleagueid);
+        
+        var mainQuery = Parse.Query.or(query1, query2);
+        mainQuery.descending("createdAt");     
+        mainQuery.limit(3);
+        return mainQuery.find({
+            success:function(results){},
+            error:function(error){console.log(error);}
+        });
+    };
+    
     return factory;
 }]);
 

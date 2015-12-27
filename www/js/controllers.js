@@ -28,10 +28,10 @@ angular.module('app.controllers', [])
    
 .controller('recentGamesCtrl', function($scope, $rootScope, LeagueService) {
     
-    $scope.setName = function(id){
+    $scope.getUser = function(id){
         for(var j = 0; j < $rootScope.standings.length; j++){
-            if(id == $rootScope.standings[j].get('UserID')){
-                return $rootScope.standings[j].get('ShortName');    
+            if(id == $rootScope.standings[j].id){
+                return $rootScope.standings[j];    
             }
         }
     }
@@ -57,8 +57,24 @@ angular.module('app.controllers', [])
         if($stateParams.userid == $rootScope.users[i].id){
             $scope.user = $rootScope.users[i];
         }
-    }                                                                                
-                                                                                                    
+    }
+    
+    //get the recent games of that specific user
+    LeagueService.getRecentGamesForUser($stateParams.userleagueid).then(function(data){
+        $scope.recentUserGames = data;
+    });
+    
+    $scope.formatAverage = function(str){
+        return str.substring(0,3);
+    }
+    
+    $scope.getUser = function(id){
+        for(var j = 0; j < $rootScope.standings.length; j++){
+            if(id == $rootScope.standings[j].id){
+                return $rootScope.standings[j];    
+            }
+        }
+    }                                                                                              
 })
 
 .controller('tabCtrl', function($rootScope, LeagueService){
