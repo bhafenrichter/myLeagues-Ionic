@@ -2,16 +2,16 @@
     <ion-content overflow-scroll="true" padding="true" class="has-header">
         <div class="row" style="margin-bottom:15px;">
             <div class="col-50">
-                <img ng-src="{{}}" style="border-radius:50px; width:75px; height:75px; border: solid white 2px; box-shadow: 0px 0px 10px #888888; margin: 0 auto; display:block; margin-bottom:15px;"/>
-                <h4 style="text-align:center; margin-bottom:0px;">B. Hafenrichter</h4>
-                <p style="text-align:center;">5-2</p>
-                <h1 style="text-align:center;">4</h1>
+                <img ng-src="{{user.get('ProfilePictureUrl')}}" style="border-radius:50px; width:75px; height:75px; border: solid white 2px; box-shadow: 0px 0px 10px #888888; margin: 0 auto; display:block; margin-bottom:15px;"/>
+                <h4 style="text-align:center; margin-bottom:0px;">{{user.get('ShortName')}}</h4>
+                <p style="text-align:center;">{{user.get("Wins")}}-{{user.get("Losses")}}</p>
+                <h1 style="text-align:center;">{{game.get('userScore')}}</h1>
             </div>
             <div class="col-50">
-                <img ng-src="{{}}" style="border-radius:50px; width:75px; height:75px; border: solid white 2px; box-shadow: 0px 0px 10px #888888; margin: 0 auto; display:block; margin-bottom:15px;"/>
-                <h4 style="text-align:center; margin-bottom:0px;">B. Horncastle</h4>
-                <p style="text-align:center;">0-3</p>
-                <h1 style="text-align:center;">3</h1>
+                <img ng-src="{{opponent.get('ProfilePictureUrl')}}" style="border-radius:50px; width:75px; height:75px; border: solid white 2px; box-shadow: 0px 0px 10px #888888; margin: 0 auto; display:block; margin-bottom:15px;"/>
+                <h4 style="text-align:center; margin-bottom:0px;">{{opponent.get('ShortName')}}</h4>
+                <p style="text-align:center;">{{opponent.get("Wins")}}-{{opponent.get("Losses")}}</p>
+                <h1 style="text-align:center;">{{game.get('opponentScore')}}</h1>
             </div>
         </div>
         

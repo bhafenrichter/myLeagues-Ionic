@@ -87,7 +87,7 @@ angular.module('app.services', [])
     };
     
     factory.getAllUserInformation = function(userleaguearray){
-        
+        console.table(userleaguearray);
         var query = new Parse.Query(Parse.User);
         query.containedIn("objectId", userleaguearray);
         return query.find({
@@ -116,6 +116,47 @@ angular.module('app.services', [])
             success:function(results){},
             error:function(error){console.log(error);}
         });
+    };
+    
+    factory.getGame = function(id){
+        var game = new Parse.Object.extend("Game");
+        var query = new Parse.Query(game);
+        
+        query.equalTo("objectId", id);
+        return query.first({
+            success:function(results){},
+            error: function(error){console.log(error);}
+        });
+    }
+    
+    factory.searchUsers = function(searchText){
+        var query = new Parse.Query(Parse.User);
+        query.contains("username", searchText);
+        return query.find({
+            success:function(results){console.table(results);},
+            error:function(error){console.log(error);}
+        }); 
+    };
+    
+    //adds user to specified league
+    factory.addUserToLeague = function(userid, leagueid, user){
+        var UserLeague = Parse.Object.extend("UserLeague");
+        var userleague = new UserLeague();
+        userleague.set("PointsAllowed", "0");
+        userleague.set("PointsScored", "0");
+        userleague.set("UserID", userid);
+        userleague.set("ShortName", user.get("firstName").substring(0,1) + ". " + user.get("lastName"));
+        userleague.set("LeagueID", leagueid);
+        userleague.set("isDeleted", false);
+        userleague.set("Wins", "0");
+        userleague.set("Losses", "0");
+        userleague.set("ProfilePictureUrl", user.get("profilePictureUrl"));
+        
+        return userleague.save(null, {
+            success:function(userleague){alert("User has been added!");},
+            error:function(error){alert(error);}
+        });
+                       
     };
     
     return factory;

@@ -35,10 +35,43 @@ angular.module('app.controllers', [])
             }
         }
     }
+    
+    
 })
    
-.controller('leagueStandingsCtrl', function($scope, LeagueService) {       
+.controller('leagueStandingsCtrl', function($scope, LeagueService, $ionicModal, $rootScope) {       
+    $ionicModal.fromTemplateUrl('contact-modal.html', {
+        scope: $scope,
+        animation: 'slide-in-up'
+    }).then(function(modal) {
+        $scope.modal = modal
+    })  
+
+    $scope.openModal = function() {
+        $scope.modal.show()
+    }
+
+    $scope.closeModal = function() {
+        $scope.modal.hide();
+    };
+
+    $scope.$on('$destroy', function() {
+        $scope.modal.remove();
+    });
     
+    $scope.searchUsers = function(searchText){
+        LeagueService.searchUsers(searchText).then(function(data){
+            $scope.searchedUsers = data;   
+            $scope.$apply();
+        });
+    };
+    
+    $scope.addUserToLeague = function(id, leagueid, user){
+        console.log(id);
+        LeagueService.addUserToLeague(id, leagueid, user).then(function(data){  
+            
+        });
+    };
 })
       
 .controller('addGameCtrl', function($scope) {
@@ -110,6 +143,13 @@ angular.module('app.controllers', [])
             }
         }
     }; 
+    
+    LeagueService.getGame($stateParams.gameid).then(function(data){
+        $scope.game = data; 
+        $scope.user = $scope.getUser(data.get("userID"));
+        $scope.opponent = $scope.getUser(data.get("opponentID"));
+        $scope.$apply();
+    });
     
     
 })
