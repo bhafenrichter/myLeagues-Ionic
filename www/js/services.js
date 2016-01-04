@@ -140,6 +140,10 @@ angular.module('app.services', [])
     
     //adds user to specified league
     factory.addUserToLeague = function(userid, leagueid, user){
+        
+        
+        
+        //add user to league
         var UserLeague = Parse.Object.extend("UserLeague");
         var userleague = new UserLeague();
         userleague.set("PointsAllowed", "0");
@@ -157,6 +161,23 @@ angular.module('app.services', [])
             error:function(error){alert(error);}
         });
                        
+    };
+
+    factory.isUserInLeague = function(userid, leagueid){
+        //check to see if user is currently in the league
+        var query = new Parse.Query("UserLeague");
+        query.equalTo("UserID", userid);
+        query.equalTo("LeagueID", leagueid);
+        return query.count({
+            success: function(count){
+                if(count > 0){
+                    return true; 
+                }else{
+                    return false;   
+                }
+            },
+            error: function(error){console.log(error);}
+        });  
     };
     
     return factory;

@@ -68,8 +68,17 @@ angular.module('app.controllers', [])
     
     $scope.addUserToLeague = function(id, leagueid, user){
         console.log(id);
-        LeagueService.addUserToLeague(id, leagueid, user).then(function(data){  
-            
+        LeagueService.isUserInLeague(id, leagueid).then(function(data){  
+            console.log(data);
+            if(data == "1"){
+                //add the user to the league because he doesn't exist
+                alert("User is already in this league.");
+            }else{
+                //don't add the user, he's already in the database
+                LeagueService.addUserToLeague(id,leagueid,user).then(function(data){
+                    alert("User has been successfully added.");
+                });
+            }
         });
     };
 })
