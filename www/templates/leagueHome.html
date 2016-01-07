@@ -1,4 +1,9 @@
-<ion-view title="League Home">
+<ion-view title="{{league.get('LeagueName')}}">
+    <ion-nav-buttons side="right">
+        <button class="button" ng-click="openModal(false)">
+            +
+        </button>
+    </ion-nav-buttons>
     <ion-content overflow-scroll="true" padding="true" class="has-header">
         <div class="list card" style="margin-top:0px;">
             <div class="item item-body" style="padding:0px; position:relative;">

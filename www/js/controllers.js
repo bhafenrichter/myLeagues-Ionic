@@ -22,8 +22,46 @@ angular.module('app.controllers', [])
     }
 })
       
-.controller('leagueHomeCtrl', function($scope) {
+.controller('leagueHomeCtrl', function($scope, LeagueService, $ionicModal) {
+    $ionicModal.fromTemplateUrl('templates/addGame.html', {
+        scope: $scope,
+        animation: 'slide-in-up'
+    }).then(function(modal) {
+        $scope.mainModal = modal
+    })  
 
+    $scope.openModal = function(isChooseUser) {
+        if(!isChooseUser){
+            $scope.mainModal.show();
+        }else{
+            
+        }
+        
+    }
+
+    $scope.closeModal = function(isChooseUser) {
+        if(!isChooseUser){
+            $scope.mainModal.hide();
+        }else{
+            
+        }
+        
+    };
+
+    $scope.$on('$destroy', function(isChooseUser) {
+        if(!isChooseUser){
+            $scope.mainModal.remove();
+        }else{
+            
+        }
+        
+    });
+    
+    $scope.selectUser = function(){
+        
+    };
+    
+    $scope.opponent = LeagueService.generateEmptyUser();
 })
    
 .controller('recentGamesCtrl', function($scope, $rootScope, LeagueService) {
@@ -159,11 +197,14 @@ angular.module('app.controllers', [])
         $scope.opponent = $scope.getUser(data.get("opponentID"));
         $scope.$apply();
     });
-    
-    
 })
 
 .controller('tabCtrl', function($rootScope, LeagueService){
+    //gets league information
+    LeagueService.getLeagueInformation("ngX2tFbJXt").then(function(data){
+        $rootScope.league = data;
+    });
+    
     //gets the league standings
     LeagueService.getLeagueStandings("ngX2tFbJXt").then(function(data){
         $rootScope.standings = data;
@@ -182,7 +223,11 @@ angular.module('app.controllers', [])
     //gets the most recent games in the league
     LeagueService.getRecentGames("ngX2tFbJXt").then(function(data){
         $rootScope.recentGames = data;
-        
+    });
+    
+    LeagueService.getUserLeagueInformation("ha6b6pW4tu").then(function(data){
+        $rootScope.user = data;
+        console.log(data);
     });
 })
  

@@ -87,11 +87,11 @@ angular.module('app.services', [])
     };
     
     factory.getAllUserInformation = function(userleaguearray){
-        console.table(userleaguearray);
+        //console.table(userleaguearray);
         var query = new Parse.Query(Parse.User);
         query.containedIn("objectId", userleaguearray);
         return query.find({
-            success:function(results){console.table(results);},
+            success:function(results){},
             error:function(error){console.log(error);}
         });
     };
@@ -179,6 +179,25 @@ angular.module('app.services', [])
             error: function(error){console.log(error);}
         });  
     };
+    
+    factory.getLeagueInformation = function(leagueid){
+        var query = new Parse.Query("League");
+        query.equalTo("objectId", leagueid);
+        return query.first({
+            success:function(data){return data;},
+            error: function(error){console.log(error);}
+        });
+    }
+    
+    factory.generateEmptyUser = function(){
+        var UserLeague = Parse.Object.extend("UserLeague");
+        var userleague = new UserLeague();
+        userleague.set("ShortName","(Select User)");
+        userleague.set("Wins","0");
+        userleague.set("Losses","0");
+        userleague.set("ProfilePictureUrl","http://divine-warfare.com/static/img/empty_user.png");
+        return userleague;
+    }
     
     return factory;
 }]);
