@@ -138,11 +138,19 @@ angular.module('app.services', [])
         }); 
     };
     
+    factory.searchUserLeagues = function(searchText, leagueid){
+        var query = new Parse.Query("UserLeague");
+        query.contains("ShortName", searchText);
+        query.equalTo("LeagueID", leagueid);
+        return query.find({
+            success:function(results){console.table(results);},
+            error:function(error){console.log(error);}
+        }); 
+    };
+    
     //adds user to specified league
     factory.addUserToLeague = function(userid, leagueid, user){
-        
-        
-        
+
         //add user to league
         var UserLeague = Parse.Object.extend("UserLeague");
         var userleague = new UserLeague();
@@ -198,6 +206,47 @@ angular.module('app.services', [])
         userleague.set("ProfilePictureUrl","http://divine-warfare.com/static/img/empty_user.png");
         return userleague;
     }
+    
+    factory.addGame = function(user, opponent, userscore, opponentScore, headlinetext, leagueid, location, headlineImage){
+        var Game = Parse.Object.extend("Game");
+        var game = new Game();
+        game.set("userID", user.id);
+        game.set("opponentID", opponent.id);
+        game.set("userScore", userscore);
+        game.set("LeagueID", leagueid);
+        game.set("opponentScore", opponentScore);
+        game.set("headlineText", headlinetext);
+        game.set("location", location);
+        game.set("headlineImage", headlineImage);
+        game.set("opponentComments", "");
+        
+        return game.save(null, {
+            success:function(game){
+                //update the players
+                if(+userscore > +opponentScore){
+                    
+                    user.increment("Wins");
+                    opponent.increment("Losses");
+                }
+                else{
+                    user.increment("Losses");
+                    opponent.increment("Wins");
+                }
+                
+                console.log(opponent.get("PointsScored"));
+                console.log(opponentScore);
+                user.increment("PointsScored", user.get("PointsScored") + Number(userscore));
+                user.increment("PointsAllowed", user.get("PointsAllowed") + Number(opponentScore));
+                opponent.increment("PointsScored", opponent.get("PointsScored") + Number(opponentScore));
+                opponent.set("PointsAllowed", opponent.get("PointsAllowed") + Number(userscore));
+                
+                user.save();
+                opponent.save();
+            },
+            error:function(error){alert("There was an error submitting this game.  Please try again later.");}
+        });
+        
+    };
     
     return factory;
 }]);

@@ -22,7 +22,7 @@ angular.module('app.controllers', [])
     }
 })
       
-.controller('leagueHomeCtrl', function($scope, LeagueService, $ionicModal) {
+.controller('leagueHomeCtrl', function($scope, LeagueService, $ionicModal, $rootScope) {
     $ionicModal.fromTemplateUrl('templates/addGame.html', {
         scope: $scope,
         animation: 'slide-in-up'
@@ -45,7 +45,7 @@ angular.module('app.controllers', [])
         }else{
             
         }
-        
+        setTimeout($scope.resetModal, 500);
     };
 
     $scope.$on('$destroy', function(isChooseUser) {
@@ -57,11 +57,72 @@ angular.module('app.controllers', [])
         
     });
     
-    $scope.selectUser = function(){
-        
+    //add game logic
+    $scope.headlineTransition = function(){
+        var main = angular.element(document.getElementById("score"));
+        main.css("display","none");
+        var headline = angular.element(document.getElementById("headline"));
+        headline.css("display","");
+        var mainButton = angular.element(document.getElementById("mainButton"));
+        mainButton.css("display","none");
+        var headlineButton = angular.element(document.getElementById("headlineButton"));
+        headlineButton.css("display","");
     };
     
+    $scope.userPickTransition = function(){
+        var main = angular.element(document.getElementById("score"));
+        main.css("display","none");
+        var mainButton = angular.element(document.getElementById("mainButton"));
+        mainButton.css("display","none");
+        var userPick = angular.element(document.getElementById("userPick"));
+        userPick.css("display","");
+        
+    };
+    $scope.resetModal = function(){
+        //show first modal
+        var main = angular.element(document.getElementById("score"));
+        main.css("display","");
+        var mainButton = angular.element(document.getElementById("mainButton"));
+        mainButton.css("display","");
+        
+        //hide headline modal
+        var headline = angular.element(document.getElementById("headline"));
+        headline.css("display","none");
+        var headlineButton = angular.element(document.getElementById("headlineButton"));
+        headlineButton.css("display","none");
+        
+        //hide user pick modal
+        var userPick = angular.element(document.getElementById("userPick"));
+        userPick.css("display","none");
+        
+        console.log("Reset Modal");
+    };
+    
+    $scope.searchUsers = function(searchText){
+        LeagueService.searchUserLeagues(searchText, "ngX2tFbJXt").then(function(data){
+            $scope.searchedUsers = data;   
+            $scope.$apply();
+        });
+    };
+    
+    $scope.selectedUser = function(user){
+        $scope.opponent = user;
+        $scope.resetModal();
+        console.table($scope.opponent);
+    }
+
+    $scope.submitGame = function(){
+        LeagueService.addGame($scope.user, 
+                             $scope.opponent,
+                             $scope.game.userScore,
+                             $scope.game.opponentScore,
+                             $scope.game.headlineText,
+                             "ngX2tFbJXt",
+                             null,
+                             null);         
+    }
     $scope.opponent = LeagueService.generateEmptyUser();
+    $scope.game = {};
 })
    
 .controller('recentGamesCtrl', function($scope, $rootScope, LeagueService) {
@@ -146,7 +207,7 @@ angular.module('app.controllers', [])
     });
     
     $scope.formatAverage = function(str){
-        return str.substring(0,3);
+        return str;
     }
     
     $scope.getUser = function(id){
@@ -205,9 +266,12 @@ angular.module('app.controllers', [])
         $rootScope.league = data;
     });
     
+    $rootScope.leagueid = "ngX2tFbJXt";
+    
     //gets the league standings
     LeagueService.getLeagueStandings("ngX2tFbJXt").then(function(data){
         $rootScope.standings = data;
+        console.table(data[0].toJSON());
     }).then(function(){
         //retrieves the deeper user information with the userleague ids
         var ids = new Array($rootScope.standings.length);
