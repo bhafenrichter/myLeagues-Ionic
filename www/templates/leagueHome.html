@@ -1,39 +1,36 @@
 <ion-view title="{{league.get('LeagueName')}}">
     <ion-nav-buttons side="right">
-        <button class="button" ng-click="openModal(false)">
-            +
+        <button class="button button-clear icon ion-plus-round" ng-click="openModal(false)">
+            
         </button>
     </ion-nav-buttons>
     <ion-content overflow-scroll="true" padding="true" class="has-header">
-        <div class="list card" style="margin-top:0px;">
-            <div class="item item-body" style="padding:0px; position:relative;">
-                <img src="img/FYSnCrwhSz2OQOGeajdA_16656_623383661044555_506186267_n.jpg" style="width:100%; height: auto;">
-                <button class="button button-stable"style="position:absolute; bottom:5px; left:5px; border-radius:50px;"><</button>
-                    <button class="button button-stable" style="position:absolute; bottom:5px;right:5px; border-radius:50px;">></button>
-            </div>
-        </div>
-        <div class="list card">
-            <div class="item item-divider">League Wall</div>
-            <div class="item item-body">
-                <form class="list">
-                    <div class="row">
-                        <div class="col-75">
-                            <label class="item item-input">
-                                <input type="text" placeholder="Write a Message....">
-                            </label>
-                        </div>
-                        <div class="col-25">
-                            <input type="submit" class="button button-stable button-small" style="width:100%;" value="Post" />
-                        </div>
+        <div class="list card" style="padding: 0px; margin:0px;">
+            <div class="item">
+                <div class="row">
+                    <div class="col-75">
+                        <label class="item item-input">
+                            <input type="text" placeholder="Write a Message...." ng-model="post.contents">
+                        </label>
                     </div>
-                    
-                    
-                </form>
-                <ion-list>
-                    <ion-item>I love myLeagues so much!</ion-item>
-                </ion-list>
-                
+                    <div class="col-25">
+                        <input type="submit" class="button button-stable button-small" style="width:100%;" value="Post" ng-click="postToWall()" />
+                    </div>
+                </div>
             </div>
+            
         </div>
+            <ion-list>
+                    <div class="card">
+                        <ion-item ng-repeat="post in feed">
+                                <div class="item item-text-wrap">
+                                    <h4 style="color:black;">{{post.get('title')}}</h4>
+                                    <p style="color:black; margin-bottom:0px;">{{post.get('headlineText')}}</p>
+                                    <span style="font-size:8px;">{{getUser(post.get('userID')).get('ShortName')}} on {{post.get('createdAt').toLocaleString()}}</span>
+                                </div>
+
+                        </ion-item>
+                    </div>
+            </ion-list>
     </ion-content>
 </ion-view>

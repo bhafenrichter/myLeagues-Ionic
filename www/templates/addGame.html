@@ -1,7 +1,7 @@
 <div class="modal">
     <ion-header-bar>
         <h1 class="title">Add Game</h1>
-        <button ng-click="closeModal()">x</button>
+        <button ng-click="closeModal()" class="button button-clear icon ion-close-round"></button>
     </ion-header-bar>
     <ion-content>
         <div id="score" style="position:absolute;left:0px; top:0px; width:100%; height:100%;">
@@ -42,7 +42,16 @@
                 <table ng-repeat="user in standings | filter:searchText">
                     <tr>
                         <td ng-click="selectedUser(user)">
-                            <img ng-src="{{user.get('ProfilePictureUrl')}}" style="width:50px; height:50px;" />                             <span>{{user.get('ShortName')}}</span>
+                            <div class="row">
+                                <div class="col-30">
+                                    <img ng-src="{{user.get('ProfilePictureUrl')}}" style="width:50px; height:50px;" />
+                                </div>
+                                <div class="col-70" style="margin-left:10px;">
+                                    <h4 style="margin-bottom:0px;">{{user.get('ShortName')}}</h4>
+                                    <p>{{user.get("Wins")}}-{{user.get("Losses")}}</p>
+                                </div>
+                            </div>
+                                                         
                         </td>
                     </tr>
                 </table>

@@ -114,7 +114,7 @@ angular.module('app.routes', [])
     
     })
   
-  .state('leagueGame',{
+    .state('leagueGame',{
         url: '/leagueGame/gameid/:gameid',
         templateUrl: 'templates/leagueGame.html',
         controller: 'leagueGameCtrl'

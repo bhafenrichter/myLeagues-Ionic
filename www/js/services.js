@@ -68,7 +68,6 @@ angular.module('app.services', [])
     };
     
     factory.getUserInformation = function(userid){ 
-        console.log(userid);
         var query = new Parse.Query(Parse.User);
         query.equalTo("objectId", userid);
         return query.first({
@@ -246,6 +245,30 @@ angular.module('app.services', [])
             error:function(error){alert("There was an error submitting this game.  Please try again later.");}
         });
         
+    };
+    
+    factory.getLeaguePosts = function(leagueid){
+        var query = new Parse.Query("LeaguePost");
+        query.equalTo("leagueId", leagueid);
+        return query.find({
+            success:function(data){console.table(data);},
+            error:function(error){console.log(error);}
+        });
+        
+    };
+    
+    factory.postToWall = function(authorid, leagueid, title, contents){
+        var Post = Parse.Object.extend("LeaguePost");
+        var post = new Post();
+        post.set("leagueId", leagueid);
+        post.set("userID", authorid);
+        //post.set("headlineText", title);
+        post.set("headlineText", contents);
+        
+        return post.save(null, {
+                        success:function(post){alert("Message Posted!");},
+                        error:function(error){console.log(error);}
+        });
     };
     
     return factory;

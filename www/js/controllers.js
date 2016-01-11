@@ -123,6 +123,26 @@ angular.module('app.controllers', [])
     }
     $scope.opponent = LeagueService.generateEmptyUser();
     $scope.game = {};
+    $scope.post = {};
+    //league wall logic
+    $scope.postToWall = function(){
+        LeagueService.postToWall("ha6b6pW4tu","ngX2tFbJXt", $scope.post.title, $scope.post.contents).then(function(data){
+            //update the posts
+            LeagueService.getLeaguePosts("ngX2tFbJXt").then(function(data){
+                $rootScope.posts = data;
+                $scope.$apply();
+            }); 
+            
+        });
+    };
+    
+    $scope.getUser = function(id){
+        for(var j = 0; j < $rootScope.standings.length; j++){
+            if(id == $rootScope.standings[j].id){
+                return $rootScope.standings[j];    
+            }
+        }
+    }
 })
    
 .controller('recentGamesCtrl', function($scope, $rootScope, LeagueService) {
@@ -287,11 +307,33 @@ angular.module('app.controllers', [])
     //gets the most recent games in the league
     LeagueService.getRecentGames("ngX2tFbJXt").then(function(data){
         $rootScope.recentGames = data;
+        //get the posts
+        LeagueService.getLeaguePosts("ngX2tFbJXt").then(function(data){
+           $rootScope.posts = data;
+
+            //merge the posts and the games for leaguehome news feed
+            var feed = $rootScope.recentGames.concat($rootScope.posts);
+            feed.sort(function(a,b){return b.get("createdAt") - a.get("createdAt");})
+            console.table(feed);
+            
+            //remove elements that don't have headline texts to them
+            for(var i = 0; i < feed.length; i++){
+                
+                if((typeof feed[i].get("headlineText") == 'undefined')){
+                    //feed.splice(i,2);
+                    console.log(i);
+                }
+            }
+            
+            $rootScope.feed = feed;
+        });
     });
     
     LeagueService.getUserLeagueInformation("ha6b6pW4tu").then(function(data){
         $rootScope.user = data;
         console.log(data);
     });
+    
+    
 })
  
