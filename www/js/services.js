@@ -1,8 +1,7 @@
 angular.module('app.services', [])
 
-.factory('AccountService', [function($q, $location){
+.service('AccountService', [function($q, $location){
     var factory = {};
-    
     factory.login = function(username, password){
         return Parse.User.logIn(username, password,{
             success: function(user){
@@ -271,6 +270,57 @@ angular.module('app.services', [])
         });
     };
     
+    factory.renameLeague = function(userid, leagueid, name){
+        //get the league and modify its name
+        var query = new Parse.Query("League");
+        query.equalTo("objectId", leagueid);
+        return query.first({
+            success:function(league){
+                league.set("LeagueName", name);
+                league.save();
+                return true;
+            },    
+            error:function(error){ return false; }
+        });
+    };
+    
+    factory.rewriteLeagueMotto = function(userid, leagueid, motto){
+        var query = new Parse.Query("League");
+        query.equalTo("objectId", leagueid);
+        return query.first({
+            success:function(league){
+                league.set("LeagueMotto", motto);
+                league.save();
+                return true;
+            },    
+            error:function(error){ return false; }
+        });
+    };
+    
+    return factory;
+}])
+
+.service('PopupService', ['$ionicPopup', function($ionicPopup){
+    var factory = {};
+    
+    factory.confirmDialog = function(title, contents, actionName){
+        var data = {};
+        
+        return $ionicPopup.prompt({
+           title: title,
+           inputType: 'input',
+           inputPlaceholder: contents
+         });
+    }
+    
+    factory.messageDialog = function(message){
+        var alertPopup = $ionicPopup.alert({
+         title: 'Message',
+         template: message
+       });
+    };
+    
     return factory;
 }]);
+
 

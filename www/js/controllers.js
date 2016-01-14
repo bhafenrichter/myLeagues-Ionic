@@ -158,23 +158,40 @@ angular.module('app.controllers', [])
     
 })
    
-.controller('leagueStandingsCtrl', function($scope, LeagueService, $ionicModal, $rootScope) {       
+.controller('leagueStandingsCtrl', function($scope, LeagueService, $ionicModal, $rootScope, PopupService) {       
     $ionicModal.fromTemplateUrl('contact-modal.html', {
         scope: $scope,
         animation: 'slide-in-up'
     }).then(function(modal) {
         $scope.modal = modal
-    })  
+    });
+    
+    $ionicModal.fromTemplateUrl('settings-modal.html', {
+        scope: $scope,
+        animation: 'slide-in-up'
+    }).then(function(modal) {
+        $scope.settings = modal;
+    });
 
-    $scope.openModal = function() {
-        $scope.modal.show()
+    $scope.openModal = function(isSettings) {
+        if(isSettings){
+            $scope.settings.show();
+        }else{
+           $scope.modal.show(); 
+        }
+        
     }
 
-    $scope.closeModal = function() {
-        $scope.modal.hide();
+    $scope.closeModal = function(isSettings) {
+        if(isSettings){
+            $scope.settings.hide();
+        }else{
+            $scope.modal.hide();
+        }
+        
     };
 
-    $scope.$on('$destroy', function() {
+    $scope.$on('$destroy', function(isSettings) {
         $scope.modal.remove();
     });
     
@@ -200,6 +217,34 @@ angular.module('app.controllers', [])
             }
         });
     };
+    
+    $scope.changeLeagueName = function(){
+         var leagueName = PopupService.confirmDialog("Rename League","","Rename").then(function(data){
+             console.log(data);
+             LeagueService.renameLeague("ha6b6pW4tu","ngX2tFbJXt",data).then(function(success){
+                if(success){
+                    PopupService.messageDialog("League name was successfully changed!");    
+                }else{
+                    PopupService.messageDialog("There was an error changing the League's name, please try again later.")
+                }
+             });
+         });
+    };
+    
+    $scope.changeLeagueMotto = function(){
+        var leagueMotto = PopupService.confirmDialog("Rewrite League Motto","","Save").then(function(data){
+             console.log(data);
+            if(data != "" && data != null){
+                LeagueService.rewriteLeagueMotto("ha6b6pW4tu","ngX2tFbJXt",data).then(function(success){
+                if(success){
+                    PopupService.messageDialog("League motto was successfully changed!");    
+                }else{
+                    PopupService.messageDialog("There was an error changing the League's motto, please try again later.")
+                }
+             }); 
+            }
+         });
+    }
 })
       
 .controller('addGameCtrl', function($scope) {
@@ -321,7 +366,7 @@ angular.module('app.controllers', [])
                 
                 if((typeof feed[i].get("headlineText") == 'undefined')){
                     //feed.splice(i,2);
-                    console.log(i);
+                    //console.log(i);
                 }
             }
             
