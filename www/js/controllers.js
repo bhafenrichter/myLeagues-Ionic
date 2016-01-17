@@ -23,6 +23,7 @@ angular.module('app.controllers', [])
 })
       
 .controller('leagueHomeCtrl', function($scope, LeagueService, $ionicModal, $rootScope) {
+    
     $ionicModal.fromTemplateUrl('templates/addGame.html', {
         scope: $scope,
         animation: 'slide-in-up'
@@ -221,13 +222,15 @@ angular.module('app.controllers', [])
     $scope.changeLeagueName = function(){
          var leagueName = PopupService.confirmDialog("Rename League","","Rename").then(function(data){
              console.log(data);
-             LeagueService.renameLeague("ha6b6pW4tu","ngX2tFbJXt",data).then(function(success){
-                if(success){
-                    PopupService.messageDialog("League name was successfully changed!");    
-                }else{
-                    PopupService.messageDialog("There was an error changing the League's name, please try again later.")
-                }
-             });
+             if(data != "" && data != null){
+                 LeagueService.renameLeague("ha6b6pW4tu","ngX2tFbJXt",data).then(function(success){
+                    if(success){
+                        PopupService.messageDialog("League name was successfully changed!");    
+                    }else{
+                        PopupService.messageDialog("There was an error changing the League's name, please try again later.")
+                    }
+                 });
+             }
          });
     };
     
@@ -244,7 +247,13 @@ angular.module('app.controllers', [])
              }); 
             }
          });
-    }
+    };
+    
+    $scope.changeLeagueImage = function(){
+        angular.element(document).find('#leagueAvatar')[0].addEventListener('change', function (e){
+            console.log("batch");
+        }); 
+    };
 })
       
 .controller('addGameCtrl', function($scope) {
@@ -325,7 +334,8 @@ angular.module('app.controllers', [])
     });
 })
 
-.controller('tabCtrl', function($rootScope, LeagueService){
+.controller('tabCtrl', function($rootScope, LeagueService, $ionicSideMenuDelegate){    
+    
     //gets league information
     LeagueService.getLeagueInformation("ngX2tFbJXt").then(function(data){
         $rootScope.league = data;
@@ -379,6 +389,8 @@ angular.module('app.controllers', [])
         console.log(data);
     });
     
-    
+    $rootScope.toggleMenu = function(){
+        $ionicSideMenuDelegate.toggleLeft();
+    }
 })
  
