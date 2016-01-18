@@ -25,10 +25,26 @@
 <!--  Side Menu  -->
      <ion-side-menu side="left">
     <ion-header-bar class="bar-stable">
-      <h1 class="title">Your Leagues</h1>
+        <h1 class="title">Your Leagues</h1>
+        
     </ion-header-bar>
     <ion-content>
-      
+        <ion-list>
+            <ion-item ng-repeat="league in myLeagues">
+                <div class="row" ng-click="switchLeague({{league}})">
+                    <div class="col-20">
+                        <img ng-src="{{league.get('LeaguePictureUrl')}}" style="width:25px; height:25px;" />
+                    </div>
+                    <div class="col-80">
+                        <h3 style="display:inline;">{{league.get('LeagueName')}}</h3>
+                        <p>{{league.get('LeagueType')}}</p>
+                    </div>
+                </div>
+            </ion-item>
+            <ion-item>
+                <button class="button button-stable" style="width:100%;">Add League</button>
+            </ion-item>
+        </ion-list>
     </ion-content>
   </ion-side-menu>
 </ion-side-menus>

@@ -297,6 +297,36 @@ angular.module('app.services', [])
         });
     };
     
+    factory.getLeaguesForUser = function(userid){
+        //get the user leagues for the leagueids the user is in
+        return factory.getUserLeagues(userid).then(function(data){
+            //generate array to hold leagueids we're querying for
+            var leagueids = [];
+            for(var i = 0; i < data.length; i++){
+                leagueids.push(data[i].get("LeagueID"));
+            }
+            //console.table(leagueids);
+            
+            //get all of the leagues that contain these ids
+            var query = new Parse.Query("League");
+            query.containedIn("objectId", leagueids);
+            return query.find({
+                success:function(data){return data;},
+                error:function(error){console.log(error);}
+            })
+        });
+        
+    };
+    
+    factory.getUserLeagues = function(userid){
+        var query = new Parse.Query("UserLeague");
+        query.equalTo("UserID", userid);
+        return query.find({
+            success:function(data){return data;},
+            error:function(error){console.log(error);}
+        })
+    }
+    
     return factory;
 }])
 

@@ -334,7 +334,17 @@ angular.module('app.controllers', [])
     });
 })
 
-.controller('tabCtrl', function($rootScope, LeagueService, $ionicSideMenuDelegate){    
+.controller('tabCtrl', function($rootScope, LeagueService, $ionicSideMenuDelegate, $route){    
+    
+    $rootScope.switchLeague = function(league){
+        console.log(league.objectId);
+        $route.reload();
+    }
+    
+    LeagueService.getLeaguesForUser("ncJ40LvgkH").then(function(data){
+        console.log(data);
+        $rootScope.myLeagues = data; 
+    });
     
     //gets league information
     LeagueService.getLeagueInformation("ngX2tFbJXt").then(function(data){
