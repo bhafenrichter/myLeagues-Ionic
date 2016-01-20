@@ -9,13 +9,13 @@
     </ion-nav-bar>
     <!--Tabs-->
     <ion-tabs class="tabs-stable tabs-icon-top">
-        <ion-tab title="League Home" icon="ion-ios-home-outline" href="#/tabs/leagueHome">
+        <ion-tab title="League Home" icon="ion-ios-home-outline" href="#/tabs/leagueid/{{league.id}}/leagueHome">
             <ion-nav-view name="tab1"></ion-nav-view>
         </ion-tab>
-        <ion-tab title="Recent Games" icon="ion-ios-game-controller-b-outline" href="#/tabs/recentGames">
+        <ion-tab title="Recent Games" icon="ion-ios-game-controller-b-outline" href="#/tabs/leagueid/{{league.id}}/recentGames">
             <ion-nav-view name="tab2"></ion-nav-view>
         </ion-tab>
-        <ion-tab title="Standings" icon="ion-ios-list-outline" href="#/tabs/leagueStandings">
+        <ion-tab title="Standings" icon="ion-ios-list-outline" href="#/tabs/leagueid/{{league.id}}/leagueStandings">
             <ion-nav-view name="tab3"></ion-nav-view>
         </ion-tab>
     </ion-tabs>
@@ -30,19 +30,22 @@
     </ion-header-bar>
     <ion-content>
         <ion-list>
-            <ion-item ng-repeat="league in myLeagues">
-                <div class="row" ng-click="switchLeague({{league}})">
-                    <div class="col-20">
-                        <img ng-src="{{league.get('LeaguePictureUrl')}}" style="width:25px; height:25px;" />
-                    </div>
-                    <div class="col-80">
-                        <h3 style="display:inline;">{{league.get('LeagueName')}}</h3>
-                        <p>{{league.get('LeagueType')}}</p>
-                    </div>
+            <ion-item ng-repeat="league in myLeagues" onclick="location.reload();">
+                <div class="row">
+                    <a href="#/tabs/leagueid/{{league.id}}/leagueHome">
+                        <div class="col-20">
+                            <img ng-src="{{league.get('LeaguePictureUrl')}}" style="width:25px; height:25px;" />
+                        </div>
+                        <div class="col-80">
+                            <h3 style="display:inline;">{{league.get('LeagueName')}}</h3>
+                            <p>{{league.get('LeagueType')}}</p>
+                        </div>
+                    </a>
+                    
                 </div>
             </ion-item>
             <ion-item>
-                <button class="button button-stable" style="width:100%;">Add League</button>
+                <a href="#/addLeague" class="button button-stable" style="width:100%;">Add League</a>
             </ion-item>
         </ion-list>
     </ion-content>

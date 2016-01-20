@@ -80,7 +80,7 @@ angular.module('app.routes', [])
     
       
     .state('tabsController', {
-      url: '/tabs',
+      url: '/tabs/leagueid/:leagueid',
       abstract:true,
       templateUrl: 'templates/tabsController.html',
       controller: 'tabCtrl'
@@ -119,6 +119,12 @@ angular.module('app.routes', [])
         templateUrl: 'templates/leagueGame.html',
         controller: 'leagueGameCtrl'
     
+    })
+  
+    .state('addLeague',{
+        url: '/addLeague',
+        templateUrl: 'templates/addLeague.html',
+        controller: 'addLeagueCtrl'
     })
     ;
 

@@ -1,0 +1,21 @@
+<ion-view title="Add League">
+    <ion-content overflow-scroll="true" padding="true" class="has-header">
+        <form class="list">
+            <ion-list>
+                <label class="item item-input">
+                    <span class="input-label">League Name</span>
+                    <input type="text" ng-model="leagueName" placeholder="">
+                </label>
+                <label class="item item-input">
+                    <span class="input-label">League Type</span>
+                    <input type="text" ng-model="leagueType" placeholder="">
+                </label>
+                <label class="item item-input">
+                    <span class="input-label">Motto</span>
+                    <input type="text" ng-model="leagueMotto" placeholder="">
+                </label>
+            </ion-list>
+            <button class="button button-balanced button-block " ng-click="createLeague(leagueName, leagueType, leagueMotto)">Create League</button>
+        </form>
+    </ion-content>
+</ion-view>

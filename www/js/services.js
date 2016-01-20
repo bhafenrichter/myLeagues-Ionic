@@ -325,7 +325,39 @@ angular.module('app.services', [])
             success:function(data){return data;},
             error:function(error){console.log(error);}
         })
-    }
+    };
+    
+    factory.createLeague = function(name, type, motto, userid, shortName){
+        var League = Parse.Object.extend("League");
+        var league = new League();
+        league.set("LeagueName", name);
+        league.set("LeagueType", type);
+        league.set("LeagueMotto", motto);
+        league.set("GameCount", 0);
+        
+        return league.save(null, {
+            success:function(league){
+                //add user to league
+                var UserLeague = Parse.Object.extend("UserLeague");
+                var userleague = new UserLeague();
+                userleague.set("UserID", userid);
+                userleague.set("LeagueID", league.id);
+                userleague.set("Wins", 0);
+                userleague.set("Losses", 0);
+                userleague.set("PointsAllowed", 0);
+                userleague.set("PointsScored", 0);
+                userleague.set("isDeleted", false);
+                userleague.set("ShortName", shortName);
+                userleague.save(null,{
+                    success:function(userleague){return true;},
+                    error:function(error){return false;}
+                });
+                return true;
+            
+            },
+            error:function(error){return false;}
+        });
+    };
     
     return factory;
 }])
