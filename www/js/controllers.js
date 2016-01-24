@@ -1,6 +1,17 @@
 angular.module('app.controllers', [])
   
 .controller('loginCtrl', function($scope, $state, AccountService, $rootScope, LeagueService, PopupService) {
+    //checks to see if the user has already checked in
+    if(Parse.User.current()){
+        var data = 
+        $rootScope.user = Parse.User.current();
+        LeagueService.getUserLeagues(data.id).then(function(data){
+            $rootScope.myLeagues = data;
+            $state.go("tabsController.leagueHome");
+        });
+    }
+    
+    //standard login
     $scope.username = "bhafenri";
     $scope.password = "password";
     $scope.login = function(username,password){
@@ -8,8 +19,12 @@ angular.module('app.controllers', [])
             if(data.id != ""){
                 //get user data to be used in app
                 LeagueService.getUserInformation(data.id).then(function(data){
-                    $rootScope.user = data; 
-                    $state.go("tabsController.leagueHome");  
+                    $rootScope.user = data;
+                    LeagueService.getUserLeagues(data.id).then(function(data){
+                        $rootScope.myLeagues = data;
+                        $state.go("tabsController.leagueHome");
+                    });
+                      
                 });
             }
         });
@@ -104,7 +119,7 @@ angular.module('app.controllers', [])
     };
     
     $scope.searchUsers = function(searchText){
-        LeagueService.searchUserLeagues(searchText, "ngX2tFbJXt").then(function(data){
+        LeagueService.searchUserLeagues(searchText, $rootScope.leagueViewModel.leagueid).then(function(data){
             $scope.searchedUsers = data;   
             $scope.$apply();
         });
@@ -122,7 +137,7 @@ angular.module('app.controllers', [])
                              $scope.game.userScore,
                              $scope.game.opponentScore,
                              $scope.game.headlineText,
-                             "ngX2tFbJXt",
+                             $rootScope.leagueViewModel.leagueid,
                              null,
                              null).then(function(data){
             PopupService.messageDialog("Game has been posted!");
@@ -134,7 +149,7 @@ angular.module('app.controllers', [])
     $scope.post = {};
     //league wall logic
     $scope.postToWall = function(){
-        LeagueService.postToWall("ha6b6pW4tu","ngX2tFbJXt", $scope.post.title, $scope.post.contents).then(function(data){
+        LeagueService.postToWall($rootScope.leagueViewModel.userleagueid, $rootScope.leagueViewModel.leagueid, $scope.post.title, $scope.post.contents).then(function(data){
             //update the posts
             LeagueService.getLeaguePosts($rootScope.leagueViewModel.leagueid).then(function(data){
                 $rootScope.leagueViewModel.posts = data;
@@ -355,14 +370,8 @@ angular.module('app.controllers', [])
 
 .controller('tabCtrl', function($rootScope, LeagueService, $ionicSideMenuDelegate, $scope, $state){  
     
-//    if($rootScope.leagueid == null || $rootScope.leagueid == ""){
-//        $rootScope.isEmptyLeague = true;
-//    }else{
-//        $rootScope.isEmptyLeague = false;
-//    }
-    
-    $rootScope.switchLeagues = function(leagueid){
-        LeagueService.initLeague(leagueid,"ncJ40LvgkH").then(function(data){
+    $rootScope.switchLeagues = function(leagueid, index){
+        LeagueService.initLeague(leagueid,$rootScope.user.id, $rootScope.myLeagues[index].id).then(function(data){
             $rootScope.leagueViewModel = data; 
             $rootScope.toggleMenu();
             $state.go("tabsController.leagueHome");  
@@ -370,8 +379,24 @@ angular.module('app.controllers', [])
         });
     };
     
+    //check to see if user is logged in
+    if(!$rootScope.user){
+        $rootScope.user = Parse.User.current();
+    }else{
+        
+    }
     
-    $rootScope.switchLeagues("ngX2tFbJXt");
+    //user has logged in passed login screen, and needs to have the data refreshed
+    if(!$rootScope.myLeagues){
+         LeagueService.getUserLeagues(Parse.User.current().id).then(function(data){
+            $rootScope.myLeagues = data;
+            $rootScope.switchLeagues($rootScope.myLeagues[0].get('LeagueID'), 0);
+        });
+    }else{
+       
+        $rootScope.switchLeagues($rootScope.myLeagues[0].get('LeagueID'), 0);
+    }
+    
     
     $rootScope.toggleMenu = function(){
         $ionicSideMenuDelegate.toggleLeft();

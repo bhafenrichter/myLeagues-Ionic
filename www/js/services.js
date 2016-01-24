@@ -359,10 +359,11 @@ angular.module('app.services', [])
         });
     };
     
-    factory.initLeague = function(leagueid,userid){
+    factory.initLeague = function(leagueid,userid, userleagueid){
         var leagueViewModel = {};
         leagueViewModel.userid = userid;
         leagueViewModel.leagueid = leagueid;
+        leagueViewModel.userleagueid = userleagueid;
         leagueViewModel.switchLeague = function(league){
             console.log(league.objectId);
             leagueViewModel.leagueid = league.objectId;
@@ -421,14 +422,14 @@ angular.module('app.services', [])
             });
         });
 
-        var task5 = factory.getUserLeagueInformation("ha6b6pW4tu").then(function(data){
+        var task5 = factory.getUserLeagueInformation(leagueViewModel.userleagueid).then(function(data){
             leagueViewModel.user = data;
             //console.log(data);
         });
         
         //wait for all tasks to resolve then send back the data
         return $q.all([task1, task2, task3, task4, task5]).then(function(){        
-            //console.table(leagueViewModel);
+            console.log(leagueViewModel);
             return leagueViewModel;
         });
 

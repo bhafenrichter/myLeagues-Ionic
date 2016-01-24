@@ -30,7 +30,7 @@
     <ion-content>
         <ion-list>
             <ion-item ng-repeat="league in leagueViewModel.myLeagues">
-                <div class="row" ng-click="switchLeagues(league.id)">
+                <div class="row" ng-click="switchLeagues(league.id, $index)">
 <!--                    <a href="#/tabs/leagueid/{{league.id}}/leagueHome">-->
                         <div class="col-20">
                             <img ng-src="{{league.get('LeaguePictureUrl')}}" style="width:25px; height:25px;" />

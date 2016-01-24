@@ -4,7 +4,7 @@
             <li class="item" style="padding:0px 25px 0px 0px;" ng-repeat="game in scheduledGames">
                 <div class="row">
                     <div class="col-20">
-                        <img ng-src="{{getUser($rootScope, game.get('userID')).get('ProfilePictureUrl')}}" style="width:30px; height:30px; border-radius:25px;" />
+                        <img ng-src="{{getUser(game.get('userID')).get('ProfilePictureUrl')}}" style="width:30px; height:30px; border-radius:25px;" />
                     </div>
                     <div class="col-50">
                         <h2 style="padding-top: 5px;">{{getUser(game.get('userID')).get('ShortName')}}</h2>
