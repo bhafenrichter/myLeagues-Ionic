@@ -6,7 +6,7 @@
     </ion-nav-buttons>
     <ion-content overflow-scroll="true" padding="true" class="has-header">
         <ul class="list">
-            <li class="item" style="padding:0px 10px 0px 0px;" ng-repeat="user in standings">
+            <li class="item" style="padding:0px 10px 0px 0px;" ng-repeat="user in leagueViewModel.standings">
                 <div class="row">
                     <div class="col-20">
                         <img ng-src="{{user.get('ProfilePictureUrl')}}" style="width:30px; height:30px; border-radius:25px;" />
@@ -74,21 +74,21 @@
                     <i class="icon ion-android-home"></i>
                     League Name
                     <span class="item-note">
-                    {{league.get('LeagueName')}}
+                    {{leagueViewModel.league.get('LeagueName')}}
                     </span>
                 </a>
                 <a class="item item-icon-left" href="#" ng-click="changeLeagueMotto()">
                     <i class="icon ion-chatbox-working"></i>
                     League Motto
                     <p class="">
-                    {{league.get('LeagueMotto')}}
+                    {{leagueViewModel.league.get('LeagueMotto')}}
                     </p>
                 </a>
                 <a class="item item-icon-left" href="#" ng-click="">
                     <i class="icon ion-ios-camera"></i>
                     League Avatar
                     <span class="item-note">
-                        <img src="{{league.get('LeaguePictureUrl')}}" style="width:25px; height:25px;" />
+                        <img src="{{leagueViewModel.league.get('LeaguePictureUrl')}}" style="width:25px; height:25px;" />
                     </span>
                    
                 </a>

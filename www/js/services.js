@@ -35,7 +35,7 @@ angular.module('app.services', [])
     return factory;
 }])
 
-.service('LeagueService', [function(){
+.service('LeagueService', ['$q', function($q){
     var factory = {};
     
     factory.getRecentGames = function(leagueid){
@@ -61,7 +61,7 @@ angular.module('app.services', [])
         query.include(Parse.User);
         query.descending("Wins");
         return query.find({
-            success:function(results){console.log(results);},
+            success:function(results){},
             error:function(error){console.log(error);}
         });
     };
@@ -250,7 +250,7 @@ angular.module('app.services', [])
         var query = new Parse.Query("LeaguePost");
         query.equalTo("leagueId", leagueid);
         return query.find({
-            success:function(data){console.table(data);},
+            success:function(data){},
             error:function(error){console.log(error);}
         });
         
@@ -358,6 +358,81 @@ angular.module('app.services', [])
             error:function(error){return false;}
         });
     };
+    
+    factory.initLeague = function(leagueid,userid){
+        var leagueViewModel = {};
+        leagueViewModel.userid = userid;
+        leagueViewModel.leagueid = leagueid;
+        leagueViewModel.switchLeague = function(league){
+            console.log(league.objectId);
+            leagueViewModel.leagueid = league.objectId;
+        }
+
+        var task1 = factory.getLeaguesForUser(leagueViewModel.userid).then(function(data){
+            leagueViewModel.myLeagues = data; 
+        });
+
+        //gets league information
+        var task2 = factory.getLeagueInformation(leagueViewModel.leagueid).then(function(data){
+            leagueViewModel.league = data;
+        });
+
+
+
+        //gets the league standings
+        var task3 = factory.getLeagueStandings(leagueViewModel.leagueid).then(function(data){
+            leagueViewModel.standings = data;
+            //console.table(data[0].toJSON());
+        }).then(function(){
+            //retrieves the deeper user information with the userleague ids
+            var ids = new Array(leagueViewModel.standings.length);
+            for(var i = 0; i < leagueViewModel.standings.length; i++){
+                ids[i] = leagueViewModel.standings[i].get("UserID");
+            }
+            //makes the call to the database
+            factory.getAllUserInformation(ids).then(function(data){
+                leagueViewModel.users = data;
+            });
+        });
+
+        //gets the most recent games in the league
+        var task4 = factory.getRecentGames(leagueViewModel.leagueid).then(function(data){
+            leagueViewModel.recentGames = data;
+            //get the posts
+            factory.getLeaguePosts(leagueViewModel.leagueid).then(function(data){
+               leagueViewModel.posts = data;
+
+                //merge the posts and the games for leaguehome news feed
+                var feed = leagueViewModel.recentGames.concat(leagueViewModel.posts);
+                feed.sort(function(a,b){return b.get("createdAt") - a.get("createdAt");})
+                //console.table(feed);
+
+                //remove elements that don't have headline texts to them
+                for(var i = 0; i < feed.length; i++){
+
+                    if((typeof feed[i].get("headlineText") == 'undefined')){
+                        //feed.splice(i,2);
+                        //console.log(i);
+                    }
+                }
+
+                leagueViewModel.feed = feed;
+                console.log(leagueViewModel.feed);
+            });
+        });
+
+        var task5 = factory.getUserLeagueInformation("ha6b6pW4tu").then(function(data){
+            leagueViewModel.user = data;
+            //console.log(data);
+        });
+        
+        //wait for all tasks to resolve then send back the data
+        return $q.all([task1, task2, task3, task4, task5]).then(function(){        
+            //console.table(leagueViewModel);
+            return leagueViewModel;
+        });
+
+    }
     
     return factory;
 }])

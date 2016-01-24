@@ -7,9 +7,9 @@
         <div id="score" style="position:absolute;left:0px; top:0px; width:100%; height:100%;">
             <div class="row" style="margin-bottom:15px;">
                 <div class="col-50">
-                    <img ng-src="{{user.get('ProfilePictureUrl')}}" style="width:100%; height:100%;margin: 0 auto; display:block; margin-bottom:15px;"/>
-                    <h4 style="text-align:center; margin-bottom:0px;">{{user.get('ShortName')}}</h4>
-                    <p style="text-align:center;">{{user.get("Wins")}}-{{user.get("Losses")}}</p>
+                    <img ng-src="{{leagueViewModel.user.get('ProfilePictureUrl')}}" style="width:100%; height:100%;margin: 0 auto; display:block; margin-bottom:15px;"/>
+                    <h4 style="text-align:center; margin-bottom:0px;">{{leagueViewModel.user.get('ShortName')}}</h4>
+                    <p style="text-align:center;">{{leagueViewModel.user.get("Wins")}}-{{leagueViewModel.user.get("Losses")}}</p>
                     <h1 style="text-align:center;">{{game.get('userScore')}}</h1>
                     <input type="text" style="width:100px; height:100px; border-radius:25px; text-align:center; font-size:48px; display: block; margin: 0 auto; box-shadow: inset 0 0 5px #000000;" ng-model="game.userScore">
                 </div>
@@ -39,7 +39,7 @@
                     <a data-tap-disabled="true" class=" button button-icon icon positive" ng-click="searchUsers(searchText);" ng-class="{'ion-search':!hasFilters,'ion-close-circled':hasFilters}"></a>
                 </label>
                 <br />
-                <table ng-repeat="user in standings | filter:searchText">
+                <table ng-repeat="user in leagueViewModel.standings | filter:searchText">
                     <tr>
                         <td ng-click="selectedUser(user)">
                             <div class="row">

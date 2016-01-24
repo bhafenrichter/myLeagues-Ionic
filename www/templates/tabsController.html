@@ -9,13 +9,13 @@
     </ion-nav-bar>
     <!--Tabs-->
     <ion-tabs class="tabs-stable tabs-icon-top">
-        <ion-tab title="League Home" icon="ion-ios-home-outline" href="#/tabs/leagueid/{{league.id}}/leagueHome">
+        <ion-tab title="League Home" icon="ion-ios-home-outline" href="#/tabs/leagueHome">
             <ion-nav-view name="tab1"></ion-nav-view>
         </ion-tab>
-        <ion-tab title="Recent Games" icon="ion-ios-game-controller-b-outline" href="#/tabs/leagueid/{{league.id}}/recentGames">
+        <ion-tab title="Recent Games" icon="ion-ios-game-controller-b-outline" href="#/tabs/recentGames">
             <ion-nav-view name="tab2"></ion-nav-view>
         </ion-tab>
-        <ion-tab title="Standings" icon="ion-ios-list-outline" href="#/tabs/leagueid/{{league.id}}/leagueStandings">
+        <ion-tab title="Standings" icon="ion-ios-list-outline" href="#/tabs/leagueStandings">
             <ion-nav-view name="tab3"></ion-nav-view>
         </ion-tab>
     </ion-tabs>
@@ -25,14 +25,13 @@
 <!--  Side Menu  -->
      <ion-side-menu side="left">
     <ion-header-bar class="bar-stable">
-        <h1 class="title">Your Leagues</h1>
-        
+        <h1 class="title">Your Leagues</h1>        
     </ion-header-bar>
     <ion-content>
         <ion-list>
-            <ion-item ng-repeat="league in myLeagues" onclick="location.reload();">
-                <div class="row">
-                    <a href="#/tabs/leagueid/{{league.id}}/leagueHome">
+            <ion-item ng-repeat="league in leagueViewModel.myLeagues">
+                <div class="row" ng-click="switchLeagues(league.id)">
+<!--                    <a href="#/tabs/leagueid/{{league.id}}/leagueHome">-->
                         <div class="col-20">
                             <img ng-src="{{league.get('LeaguePictureUrl')}}" style="width:25px; height:25px;" />
                         </div>
@@ -40,7 +39,7 @@
                             <h3 style="display:inline;">{{league.get('LeagueName')}}</h3>
                             <p>{{league.get('LeagueType')}}</p>
                         </div>
-                    </a>
+<!--                    </a>-->
                     
                 </div>
             </ion-item>

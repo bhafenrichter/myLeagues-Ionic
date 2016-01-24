@@ -1,4 +1,4 @@
-<ion-view title="{{league.get('LeagueName')}}">
+<ion-view title="{{leagueViewModel.league.get('LeagueName')}}" cache-view="false">
     <ion-nav-buttons side="right">
         <button class="button button-clear icon ion-plus-round" ng-click="openModal(false)">
             
@@ -27,7 +27,7 @@
             </div>
             <ion-list>
                     <div class="card">
-                        <ion-item ng-repeat="post in feed">
+                        <ion-item ng-repeat="post in leagueViewModel.feed">
                                 <div class="item item-text-wrap">
                                     <h4 style="color:black;">{{post.get('title')}}</h4>
                                     <p style="color:black; margin-bottom:0px;">{{post.get('headlineText')}}</p>

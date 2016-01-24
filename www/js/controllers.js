@@ -1,6 +1,6 @@
 angular.module('app.controllers', [])
   
-.controller('loginCtrl', function($scope, $state, AccountService, $rootScope, LeagueService) {
+.controller('loginCtrl', function($scope, $state, AccountService, $rootScope, LeagueService, PopupService) {
     $scope.username = "bhafenri";
     $scope.password = "password";
     $scope.login = function(username,password){
@@ -26,7 +26,7 @@ angular.module('app.controllers', [])
     }
 })
       
-.controller('leagueHomeCtrl', function($scope, LeagueService, $ionicModal, $rootScope) {
+.controller('leagueHomeCtrl', function($scope, LeagueService, $ionicModal, $rootScope, PopupService) {
 
     $ionicModal.fromTemplateUrl('templates/addGame.html', {
         scope: $scope,
@@ -117,14 +117,17 @@ angular.module('app.controllers', [])
     }
 
     $scope.submitGame = function(){
-        LeagueService.addGame($scope.user, 
+        LeagueService.addGame($rootScope.leagueViewModel.user, 
                              $scope.opponent,
                              $scope.game.userScore,
                              $scope.game.opponentScore,
                              $scope.game.headlineText,
                              "ngX2tFbJXt",
                              null,
-                             null);         
+                             null).then(function(data){
+            PopupService.messageDialog("Game has been posted!");
+            $scope.mainModal.hide();
+        });         
     }
     $scope.opponent = LeagueService.generateEmptyUser();
     $scope.game = {};
@@ -133,8 +136,8 @@ angular.module('app.controllers', [])
     $scope.postToWall = function(){
         LeagueService.postToWall("ha6b6pW4tu","ngX2tFbJXt", $scope.post.title, $scope.post.contents).then(function(data){
             //update the posts
-            LeagueService.getLeaguePosts("ngX2tFbJXt").then(function(data){
-                $rootScope.posts = data;
+            LeagueService.getLeaguePosts($rootScope.leagueViewModel.leagueid).then(function(data){
+                $rootScope.leagueViewModel.posts = data;
                 $scope.$apply();
             }); 
             
@@ -142,9 +145,9 @@ angular.module('app.controllers', [])
     };
     
     $scope.getUser = function(id){
-        for(var j = 0; j < $rootScope.standings.length; j++){
-            if(id == $rootScope.standings[j].id){
-                return $rootScope.standings[j];    
+        for(var j = 0; j < $rootScope.leagueViewModel.standings.length; j++){
+            if(id == $rootScope.leagueViewModel.standings[j].id){
+                return $rootScope.leagueViewModel.standings[j];    
             }
         }
     }
@@ -153,14 +156,12 @@ angular.module('app.controllers', [])
 .controller('recentGamesCtrl', function($scope, $rootScope, LeagueService) {
     
     $scope.getUser = function(id){
-        for(var j = 0; j < $rootScope.standings.length; j++){
-            if(id == $rootScope.standings[j].id){
-                return $rootScope.standings[j];    
+        for(var j = 0; j < $rootScope.leagueViewModel.standings.length; j++){
+            if(id == $rootScope.leagueViewModel.standings[j].id){
+                return $rootScope.leagueViewModel.standings[j];    
             }
         }
     }
-    
-    
 })
    
 .controller('leagueStandingsCtrl', function($scope, LeagueService, $ionicModal, $rootScope, PopupService) {       
@@ -210,7 +211,7 @@ angular.module('app.controllers', [])
     $scope.addUserToLeague = function(id, leagueid, user){
         console.log(id);
         LeagueService.isUserInLeague(id, leagueid).then(function(data){  
-            console.log(data);
+            //console.log(data);
             if(data == "1"){
                 //add the user to the league because he doesn't exist
                 alert("User is already in this league.");
@@ -227,7 +228,7 @@ angular.module('app.controllers', [])
          var leagueName = PopupService.confirmDialog("Rename League","","Rename").then(function(data){
              console.log(data);
              if(data != "" && data != null){
-                 LeagueService.renameLeague("ha6b6pW4tu","ngX2tFbJXt",data).then(function(success){
+                 LeagueService.renameLeague("ha6b6pW4tu", $rootScope.leagueViewModel.leagueid,data).then(function(success){
                     if(success){
                         PopupService.messageDialog("League name was successfully changed!");    
                     }else{
@@ -267,14 +268,14 @@ angular.module('app.controllers', [])
 .controller('leagueMemberCtrl', function($scope, $rootScope, LeagueService, $stateParams) { 
                                               
     //retrieves the userleague from the call already made initially                                                                                       
-    for(var i = 0; i < $rootScope.standings.length; i++){
+    for(var i = 0; i < $rootScope.leagueViewModel.standings.length; i++){
         //console.log($rootScope.standings[i].id);
         //console.log($stateParams.userid);
-        if($stateParams.userleagueid == $rootScope.standings[i].id){
-            $scope.userleague = $rootScope.standings[i];
+        if($stateParams.userleagueid == $rootScope.leagueViewModel.standings[i].id){
+            $scope.userleague = $rootScope.leagueViewModel.standings[i];
         }
-        if($stateParams.userid == $rootScope.users[i].id){
-            $scope.user = $rootScope.users[i];
+        if($stateParams.userid == $rootScope.leagueViewModel.users[i].id){
+            $scope.user = $rootScope.leagueViewModel.users[i];
         }
     }
     
@@ -289,9 +290,9 @@ angular.module('app.controllers', [])
     }
     
     $scope.getUser = function(id){
-        for(var j = 0; j < $rootScope.standings.length; j++){
-            if(id == $rootScope.standings[j].id){
-                return $rootScope.standings[j];    
+        for(var j = 0; j < $rootScope.leagueViewModel.standings.length; j++){
+            if(id == $rootScope.leagueViewModel.standings[j].id){
+                return $rootScope.leagueViewModel.standings[j];    
             }
         }
     }; 
@@ -313,9 +314,9 @@ angular.module('app.controllers', [])
     });
     
     $scope.getUser = function(id){
-        for(var j = 0; j < $rootScope.standings.length; j++){
-            if(id == $rootScope.standings[j].id){
-                return $rootScope.standings[j];    
+        for(var j = 0; j < $rootScope.leagueViewModel.standings.length; j++){
+            if(id == $rootScope.leagueViewModel.standings[j].id){
+                return $rootScope.leagueViewModel.standings[j];    
             }
         }
     }; 
@@ -323,9 +324,9 @@ angular.module('app.controllers', [])
 
 .controller('leagueGameCtrl', function($scope, LeagueService, $stateParams, $rootScope){
     $scope.getUser = function(id){
-        for(var j = 0; j < $rootScope.standings.length; j++){
-            if(id == $rootScope.standings[j].id){
-                return $rootScope.standings[j];    
+        for(var j = 0; j < $rootScope.leagueViewModel.standings.length; j++){
+            if(id == $rootScope.leagueViewModel.standings[j].id){
+                return $rootScope.leagueViewModel.standings[j];    
             }
         }
     }; 
@@ -352,77 +353,25 @@ angular.module('app.controllers', [])
     };
 })
 
-.controller('tabCtrl', function($rootScope, LeagueService, $ionicSideMenuDelegate, $stateParams, $state){    
-    $rootScope.leagueid = $stateParams.leagueid;
-    console.log($stateParams.leagueid);
-    if($rootScope.leagueid == null || $rootScope.leagueid == ""){
-        $rootScope.isEmptyLeague = true;
-    }else{
-        $rootScope.isEmptyLeague = false;
-    }
+.controller('tabCtrl', function($rootScope, LeagueService, $ionicSideMenuDelegate, $scope, $state){  
     
-    $rootScope.switchLeague = function(league){
-        console.log(league.objectId);
-        $rootScope.leagueid = league.objectId;
-    }
+//    if($rootScope.leagueid == null || $rootScope.leagueid == ""){
+//        $rootScope.isEmptyLeague = true;
+//    }else{
+//        $rootScope.isEmptyLeague = false;
+//    }
     
-    LeagueService.getLeaguesForUser("ncJ40LvgkH").then(function(data){
-        console.log(data);
-        $rootScope.myLeagues = data; 
-    });
-    
-    //gets league information
-    LeagueService.getLeagueInformation($rootScope.leagueid).then(function(data){
-        $rootScope.league = data;
-    });
-    
-
-    
-    //gets the league standings
-    LeagueService.getLeagueStandings($rootScope.leagueid).then(function(data){
-        $rootScope.standings = data;
-        //console.table(data[0].toJSON());
-    }).then(function(){
-        //retrieves the deeper user information with the userleague ids
-        var ids = new Array($rootScope.standings.length);
-        for(var i = 0; i < $rootScope.standings.length; i++){
-            ids[i] = $rootScope.standings[i].get("UserID");
-        }
-        //makes the call to the database
-        LeagueService.getAllUserInformation(ids).then(function(data){
-            $rootScope.users = data;
-        });
-    });
-    
-    //gets the most recent games in the league
-    LeagueService.getRecentGames($rootScope.leagueid).then(function(data){
-        $rootScope.recentGames = data;
-        //get the posts
-        LeagueService.getLeaguePosts($rootScope.leagueid).then(function(data){
-           $rootScope.posts = data;
-
-            //merge the posts and the games for leaguehome news feed
-            var feed = $rootScope.recentGames.concat($rootScope.posts);
-            feed.sort(function(a,b){return b.get("createdAt") - a.get("createdAt");})
-            console.table(feed);
+    $rootScope.switchLeagues = function(leagueid){
+        LeagueService.initLeague(leagueid,"ncJ40LvgkH").then(function(data){
+            $rootScope.leagueViewModel = data; 
+            $rootScope.toggleMenu();
+            $state.go("tabsController.leagueHome");  
             
-            //remove elements that don't have headline texts to them
-            for(var i = 0; i < feed.length; i++){
-                
-                if((typeof feed[i].get("headlineText") == 'undefined')){
-                    //feed.splice(i,2);
-                    //console.log(i);
-                }
-            }
-            
-            $rootScope.feed = feed;
         });
-    });
+    };
     
-    LeagueService.getUserLeagueInformation("ha6b6pW4tu").then(function(data){
-        $rootScope.user = data;
-        console.log(data);
-    });
+    
+    $rootScope.switchLeagues("ngX2tFbJXt");
     
     $rootScope.toggleMenu = function(){
         $ionicSideMenuDelegate.toggleLeft();
