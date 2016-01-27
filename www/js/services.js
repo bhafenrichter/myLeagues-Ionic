@@ -409,7 +409,7 @@ angular.module('app.services', [])
                 //console.table(feed);
 
                 //remove elements that don't have headline texts to them
-                for(var i = 0; i < feed.length; i++){
+                for(var i = 0; i < 10; i++){
 
                     if((typeof feed[i].get("headlineText") == 'undefined')){
                         //feed.splice(i,2);
