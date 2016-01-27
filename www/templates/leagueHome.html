@@ -21,17 +21,32 @@
                 </div>
             </div>
         </div>  
+<!--If we don't have a league selected-->
         <div class="" ng-if="!leagueViewModel.feed.length" style="height:100%;">
             <img src="https://cdn0.iconfinder.com/data/icons/bicon/24/editor_document_file_empty_pencil_pen_edit_write_2-512.png" style="width:100px; height:100px; margin: 0 auto; display:block; position:relative; top:35%;" />
             <h4 style="text-align:center; position:relative; top:50%;">No news to report.</h4>
         </div>
+<!--The actual feed-->
         <div ng-if="leagueViewModel.feed.length">
             <div ng-repeat="post in leagueViewModel.feed">
                 <div class="card" style="margin:10px 0px 10px 0px;">
                     <div class="item item-text-wrap">
                         <h4 style="color:black;">{{post.get('title')}}</h4>
                         <p style="color:black; margin-bottom:0px;">{{post.get('headlineText')}}</p>
-                        <span style="font-size:8px;">{{getUser(post.get('userID')).get('ShortName')}} on {{post.get('createdAt').toLocaleString()}}</span>
+                        
+<!--Like/Comment/Option Buttons-->
+                        <div class="item item-avatar" style="padding-bottom:0px; padding-left:0px;">
+
+                                                
+                                            
+                                                
+                                                
+                            <div class="item item-avatar">
+                                <img src="{{getUser(post.get('userID')).get('ProfilePictureUrl')}}" style="width:50px; height:50px; display:inline;">
+                                <h2 style="display:inline;">{{getUser(post.get('userID')).get('ShortName')}}</h4>
+                                <p style="">{{post.get('createdAt').toLocaleString()}}</p>
+                            </div>
+                        </div>
                     </div>    
                 </div>
             </div>
