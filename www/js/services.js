@@ -174,6 +174,8 @@ angular.module('app.services', [])
         var query = new Parse.Query("UserLeague");
         query.equalTo("UserID", userid);
         query.equalTo("LeagueID", leagueid);
+        console.log(userid);
+        console.log(leagueid);
         return query.count({
             success: function(count){
                 if(count > 0){
@@ -412,7 +414,7 @@ angular.module('app.services', [])
                 for(var i = 0; i < 10; i++){
 
                     if((typeof feed[i].get("headlineText") == 'undefined')){
-                        //feed.splice(i,2);
+                        feed.splice(i,2);
                         //console.log(i);
                     }
                 }

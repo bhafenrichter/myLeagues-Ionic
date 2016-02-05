@@ -224,8 +224,8 @@ angular.module('app.controllers', [])
     };
     
     $scope.addUserToLeague = function(id, leagueid, user){
-        console.log(id);
-        LeagueService.isUserInLeague(id, leagueid).then(function(data){  
+        //console.log(id);
+        LeagueService.isUserInLeague(id, $rootScope.leagueViewModel.leagueid).then(function(data){  
             //console.log(data);
             if(data == "1"){
                 //add the user to the league because he doesn't exist
@@ -355,20 +355,10 @@ angular.module('app.controllers', [])
 })
 
 .controller('addLeagueCtrl', function($scope, $rootScope, LeagueService, PopupService){
-    $scope.createLeague = function(name, type, motto){
-        console.table($rootScope.user);
-        LeagueService.createLeague(name, type, motto, $rootScope.user.id, $rootScope.user.get("ShortName")).then(function(data){
-            if(data){
-                PopupService.messageDialog("League Successfully created!");
-            }else{
-                PopupService.messageDialog("There was an error creating the league.  Please try again later.");
-            }
-             
-        });  
-    };
+    
 })
 
-.controller('tabCtrl', function($rootScope, LeagueService, $ionicSideMenuDelegate, $scope, $state){  
+.controller('tabCtrl', function($rootScope, LeagueService, $ionicSideMenuDelegate, $scope, $state, $ionicModal){  
     
     $rootScope.switchLeagues = function(leagueid, index){
         LeagueService.initLeague(leagueid,$rootScope.user.id, $rootScope.myLeagues[index].id).then(function(data){
@@ -401,5 +391,37 @@ angular.module('app.controllers', [])
     $rootScope.toggleMenu = function(){
         $ionicSideMenuDelegate.toggleLeft();
     }
+    
+    //set up add League modal
+    $ionicModal.fromTemplateUrl('addLeague-modal.html', {
+        scope: $scope,
+        animation: 'slide-in-up'
+    }).then(function(modal) {
+        $scope.mainModal = modal;
+    });
+
+    $scope.openModal = function() {
+        $scope.mainModal.show();
+    };
+
+    $scope.closeModal = function() {
+        $scope.mainModal.hide();
+    };
+
+    $scope.$on('$destroy', function() {
+        $scope.mainModal.remove();
+    });
+    
+    $scope.createLeague = function(name, type, motto){
+        console.table($rootScope.user);
+        LeagueService.createLeague(name, type, motto, $rootScope.user.id, $rootScope.user.get("ShortName")).then(function(data){
+            if(data){
+                PopupService.messageDialog("League Successfully created!");
+            }else{
+                PopupService.messageDialog("There was an error creating the league.  Please try again later.");
+            }
+             
+        });  
+    };
 })
  
