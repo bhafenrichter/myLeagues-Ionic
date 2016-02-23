@@ -132,7 +132,10 @@ angular.module('app.controllers', [])
     }
 
     $scope.submitGame = function(){
-        LeagueService.addGame($rootScope.leagueViewModel.user, 
+        if($scope.opponent == null || $scope.game.userScore == null || $scope.opponent == null){
+            PopupService.messageDialog("Please fill out all fields to submit a game.");
+        }else{
+            LeagueService.addGame($rootScope.leagueViewModel.user, 
                              $scope.opponent,
                              $scope.game.userScore,
                              $scope.game.opponentScore,
@@ -142,7 +145,10 @@ angular.module('app.controllers', [])
                              null).then(function(data){
             PopupService.messageDialog("Game has been posted!");
             $scope.mainModal.hide();
-        });         
+        });   
+        }
+        
+              
     }
     $scope.opponent = LeagueService.generateEmptyUser();
     $scope.game = {};
@@ -359,6 +365,36 @@ angular.module('app.controllers', [])
         $scope.opponent = $scope.getUser(data.get("opponentID"));
         $scope.$apply();
     });
+    
+     $scope.takePicture = function () {
+
+        // Object to save to Parse that includes an image
+        $scope.listingImageObject = {
+            text: "",
+            image: null,
+        };
+
+        var options = {
+            quality: 75,
+            destinationType: Camera.DestinationType.DATA_URL,
+            sourceType: Camera.PictureSourceType.CAMERA,
+            encodingType: Camera.EncodingType.JPEG,
+            allowEdit: true,
+            targetWidth: 300,
+            targetHeight: 300,
+            saveToPhotoAlbum: false
+        };
+
+        $cordovaCamera.getPicture(options).then(function (imageData) {
+            //Retrieve Image URI so that the photo can be previewed in the app
+            $scope.imgURI = "data:image/jpeg;base64," + imageData;
+            // Turn image into base64 string so that it can be uploaded to Parse
+            $scope.dataToSubmit = {__ContentType: "image/jpeg", base64: imageData};
+        }, function (err) {
+            // An error occurred. Show a message to the user
+            alert("Error taking picture: " + err);
+        })
+    };
 })
 
 .controller('addLeagueCtrl', function($scope, $rootScope, LeagueService, PopupService){
