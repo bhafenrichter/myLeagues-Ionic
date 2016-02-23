@@ -232,9 +232,7 @@ angular.module('app.services', [])
                     user.increment("Losses");
                     opponent.increment("Wins");
                 }
-                
-                console.log(opponent.get("PointsScored"));
-                console.log(opponentScore);
+
                 user.increment("PointsScored", user.get("PointsScored") + Number(userscore));
                 user.increment("PointsAllowed", user.get("PointsAllowed") + Number(opponentScore));
                 opponent.increment("PointsScored", opponent.get("PointsScored") + Number(opponentScore));
@@ -279,7 +277,15 @@ angular.module('app.services', [])
         return query.first({
             success:function(league){
                 league.set("LeagueName", name);
-                league.save();
+                league.save(null,{
+                    success:function(){
+                        factory.postToWall(userid,leagueid,"League Admin", "The league has been renamed to '" + name + ".'");
+                        return true;
+                    },
+                    error:function(){
+                        alert("Error Changing Name");
+                    }
+                });
                 return true;
             },    
             error:function(error){ return false; }
@@ -323,6 +329,7 @@ angular.module('app.services', [])
     factory.getUserLeagues = function(userid){
         var query = new Parse.Query("UserLeague");
         query.equalTo("UserID", userid);
+        query.equalTo("isDeleted",false);
         return query.find({
             success:function(data){return data;},
             error:function(error){console.log(error);}
@@ -336,6 +343,7 @@ angular.module('app.services', [])
         league.set("LeagueType", type);
         league.set("LeagueMotto", motto);
         league.set("GameCount", 0);
+        league.set("IsDeleted", false);
         
         return league.save(null, {
             success:function(league){
@@ -402,22 +410,23 @@ angular.module('app.services', [])
         var task4 = factory.getRecentGames(leagueViewModel.leagueid).then(function(data){
             leagueViewModel.recentGames = data;
             //get the posts
-            factory.getLeaguePosts(leagueViewModel.leagueid).then(function(data){
-               leagueViewModel.posts = data;
-
+            factory.getLeaguePosts(leagueViewModel.leagueid).then(function(data2){
+                leagueViewModel.posts = data2;
+                console.log(data2);
                 //merge the posts and the games for leaguehome news feed
-                var feed = leagueViewModel.recentGames.concat(leagueViewModel.posts);
+                //var feed = leagueViewModel.recentGames.concat(leagueViewModel.posts);
+                var feed = data2;
                 feed.sort(function(a,b){return b.get("createdAt") - a.get("createdAt");})
                 //console.table(feed);
 
                 //remove elements that don't have headline texts to them
-                for(var i = 0; i < 10; i++){
-
-                    if((typeof feed[i].get("headlineText") == 'undefined')){
-                        feed.splice(i,2);
-                        //console.log(i);
-                    }
-                }
+//                for(var i = 0; i < 10; i++){
+//
+//                    if((typeof feed[i].get("headlineText") == 'undefined')){
+//                        feed.splice(i,2);
+//                        //console.log(i);
+//                    }
+//                }
 
                 leagueViewModel.feed = feed;
                 console.log(leagueViewModel.feed);
@@ -436,6 +445,19 @@ angular.module('app.services', [])
         });
 
     }
+    
+    factory.leaveLeague = function(userleagueid){
+        var query = new Parse.Query("UserLeague");
+        query.equalTo("objectId", userleagueid);
+        return query.first({
+            success:function(results){
+                console.log(userleagueid);
+                results.set("isDeleted", true);
+                results.save();
+            },
+            error: function(error){console.log(error);}
+        });
+    };
     
     return factory;
 }])

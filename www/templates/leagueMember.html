@@ -11,11 +11,11 @@
         
         <div class="row">
             <div class="col-50">
-                <h3 style="text-align:center;">{{formatAverage(userleague.get('PointsScored') / userleague.get('Wins') + userleague.get('Losses'))}}</h3>
+                <h3 style="text-align:center;">{{average(userleague.get('PointsScored'), userleague.get('Wins'), userleague.get('Losses'))}}</h3>
                 <p style="text-align:center;">Points Per Game</p>
             </div>
             <div class="col-50">
-                <h3 style="text-align:center;">{{formatAverage(userleague.get('PointsAllowed') / userleague.get('Wins') + userleague.get('Losses'))}}</h3>
+                <h3 style="text-align:center;">{{average(userleague.get('PointsAllowed'), userleague.get('Wins'), userleague.get('Losses'))}}</h3>
                 <p style="text-align:center;">Points Allowed</p>
             </div>
         </div>

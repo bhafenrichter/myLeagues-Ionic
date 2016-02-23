@@ -274,6 +274,12 @@ angular.module('app.controllers', [])
             console.log("batch");
         }); 
     };
+    
+    $scope.leaveLeague = function(){
+        LeagueService.leaveLeague($scope.leagueViewModel.userleagueid).then(function(data){
+            PopupService.messageDialog("You have successfully left this league.");
+        });
+    }
 })
       
 .controller('addGameCtrl', function($scope) {
@@ -300,8 +306,9 @@ angular.module('app.controllers', [])
         $scope.$apply();
     });
     
-    $scope.formatAverage = function(str){
-        return str;
+    $scope.average = function(points, wins, losses){
+        var totalGames = wins + losses;
+        return points / totalGames;
     }
     
     $scope.getUser = function(id){
